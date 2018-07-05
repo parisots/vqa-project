@@ -258,7 +258,7 @@ def train(args):
 
                 net = nn.DataParallel(model.train(True))
                 acc = test_correct/(10*args.bsize)*100
-                print("Validation accuracy: {} %".format(acc))
+                print("Validation accuracy: {:.2f} %".format(acc))
 
         # save model and compute accuracy for epoch
         epoch_loss = ep_loss / n_batches
@@ -425,11 +425,8 @@ def trainval(args):
              # Do model forward
             output, adjacency_matrix = net(
                 q_batch, i_batch, k_batch, qlen_batch)
-            if args.soft_targets:
-                loss = criterion(output, a_batch)
-            else:
-                _, hard_targets = a_batch.max(1)
-                loss = criterion(output, hard_targets)
+            
+            loss = criterion(output, a_batch)
  
             # compute accuracy based on vqa evaluation
             correct = total_vqa_score(output, vote_batch)
